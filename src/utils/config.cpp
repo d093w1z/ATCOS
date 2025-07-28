@@ -5,7 +5,6 @@
 #include <sstream>
 #include <string>
 #include <toml++/toml.hpp>
-
 AppConfig::AppConfig(/* args */)
 {
     toml::table tbl;

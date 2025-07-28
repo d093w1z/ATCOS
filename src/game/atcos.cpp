@@ -4,9 +4,12 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "log.hpp"
+
 ATCOSApp::ATCOSApp()
 {
-    
+    Log::Init();
+
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
     window.setFramerateLimit(144);
     window.setPosition(sf::Vector2i(100, 100));
@@ -18,7 +21,7 @@ ATCOSApp::ATCOSApp()
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
-                spdlog::info("Window closed!");
+                Log::GetLogger()->info("Window closed!");
             }
         }
 
