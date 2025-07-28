@@ -10,6 +10,7 @@
 ATCOSApp::ATCOSApp()
 {
     Log::Init();
+    Radar r;
 
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
     window.setFramerateLimit(144);
@@ -32,4 +33,7 @@ ATCOSApp::ATCOSApp()
     }
 }
 
-ATCOSApp::~ATCOSApp() {}
+ATCOSApp::~ATCOSApp()
+{
+    ATCOS_INFO("Shutdown");
+}
