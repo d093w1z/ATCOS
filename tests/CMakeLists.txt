@@ -14,18 +14,18 @@ FetchContent_MakeAvailable(googletest)
 file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 # Add test executable
-add_executable(run_tests ${TEST_FILES})
+add_executable(atcos_tests ${TEST_FILES})
 
 # Link with gtest and your main library
-target_link_libraries(run_tests PRIVATE ATCOS_lib GTest::gtest_main)
+target_link_libraries(atcos_tests PRIVATE ATCOS_lib GTest::gtest_main)
 
 # Add test to CTest
 include(GoogleTest)
-gtest_discover_tests(run_tests)
+gtest_discover_tests(atcos_tests)
 
 # Automatically run tests after build
 add_custom_command(
-  TARGET run_tests
+  TARGET atcos_tests
   POST_BUILD
   COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
 )
