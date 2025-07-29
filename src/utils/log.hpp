@@ -4,8 +4,14 @@ class Log
 {
    public:
     static void Init();
-    inline static std::shared_ptr<spdlog::logger>& GetGameLogger() { return sGameLogger; };
-    inline static std::shared_ptr<spdlog::logger>& GetLibLogger() { return sLibLogger; };
+    inline static std::shared_ptr<spdlog::logger>& GetGameLogger()
+    {
+        return sGameLogger;
+    };
+    inline static std::shared_ptr<spdlog::logger>& GetLibLogger()
+    {
+        return sLibLogger;
+    };
 
    private:
     static std::shared_ptr<spdlog::logger> sGameLogger;
