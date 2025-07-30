@@ -83,7 +83,7 @@ Aircraft::Aircraft(/* args */) {}
 
 Aircraft::~Aircraft() {}
 
-uint Aircraft::GetFlightLevel() const
+unsigned int Aircraft::GetFlightLevel() const
 {
     return mState.flightLevel;
 }

@@ -1,27 +1,34 @@
 #include "config.hpp"
-
-#include <fstream>
-#include <map>
-#include <sstream>
 #include <string>
 #include <toml++/toml.hpp>
-AppConfig::AppConfig(/* args */)
+#include "log.hpp"
+
+Settings AppConfig::mSettings;
+
+AppConfig::AppConfig(/* args */) {}
+
+AppConfig::~AppConfig() {}
+
+Settings& AppConfig::GetSettings()
+{
+    return mSettings;
+}
+
+void AppConfig::parseFile(const std::filesystem::path& filePath)
 {
     toml::table tbl;
     try
     {
-        tbl = toml::parse_file("configuration.toml");
+        tbl = toml::parse_file(filePath.c_str());
+        ATCOS_LIB_INFO("Configuration loaded: {}", filePath.string());
     }
     catch (const toml::parse_error& err)
     {
-        // std::cerr << "Error parsing file '" << \* err.source().path << "':\n"
-        //           << err.description() << "\n (" << err.source().begin << ")\n";
+        ATCOS_LIB_ERROR("Error parsing file '{}':\n{}\n--> line {}, column {}", *err.source().path,
+                        err.description(), err.source().begin.line, err.source().begin.column);
     }
-}
-
-AppConfig::~AppConfig() {}
-
-void AppConfig::parseFile(const std::filesystem::path& filePath)
-{
+    mSettings.Window.Title = tbl["Window"]["Title"].value_or("ATCOS Game");
+    mSettings.Window.Height = tbl["Window"]["Height"].value_or(1080u);
+    mSettings.Window.Width = tbl["Window"]["Width"].value_or(1920u);
     return;
 }
