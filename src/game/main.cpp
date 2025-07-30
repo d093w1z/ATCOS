@@ -5,4 +5,5 @@
 int main()
 {
     ATCOSApp game;
+    game.RunLoop();
 }

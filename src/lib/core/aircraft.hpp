@@ -38,7 +38,7 @@ struct AircraftState
 {
     SquawkCode squawkCode;
     float heading = 0;
-    uint flightLevel = 0;
+    unsigned int flightLevel = 0;
 };
 
 class Aircraft
@@ -57,6 +57,6 @@ class Aircraft
     float GetHeading() const;
 
     void SetFlightLevel();
-    uint GetFlightLevel() const;
+    unsigned int GetFlightLevel() const;
 };
 #endif
