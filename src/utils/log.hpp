@@ -18,18 +18,18 @@ class Log
     static std::shared_ptr<spdlog::logger> sLibLogger;
 };
 
-#define ATCOS_WARN(message) Log::GetGameLogger()->warn(message);
-#define ATCOS_DEBUG(message) Log::GetGameLogger()->debug(message);
-#define ATCOS_TRACE(message) Log::GetGameLogger()->trace(message);
-#define ATCOS_ERROR(message) Log::GetGameLogger()->error(message);
-#define ATCOS_INFO(message) Log::GetGameLogger()->info(message);
-#define ATCOS_CRITICAL(message) Log::GetGameLogger()->critical(message);
-#define ATCOS_LOG(level, message) Log::GetGameLogger()->log(level, message);
+#define ATCOS_WARN(...) Log::GetGameLogger()->warn(__VA_ARGS__)
+#define ATCOS_DEBUG(...) Log::GetGameLogger()->debug(__VA_ARGS__)
+#define ATCOS_TRACE(...) Log::GetGameLogger()->trace(__VA_ARGS__)
+#define ATCOS_ERROR(...) Log::GetGameLogger()->error(__VA_ARGS__)
+#define ATCOS_INFO(...) Log::GetGameLogger()->info(__VA_ARGS__)
+#define ATCOS_CRITICAL(...) Log::GetGameLogger()->critical(__VA_ARGS__)
+#define ATCOS_LOG(level, ...) Log::GetGameLogger()->log(level, __VA_ARGS__)
 
-#define ATCOS_LIB_WARN(message) Log::GetLibLogger()->warn(message);
-#define ATCOS_LIB_DEBUG(message) Log::GetLibLogger()->debug(message);
-#define ATCOS_LIB_TRACE(message) Log::GetLibLogger()->trace(message);
-#define ATCOS_LIB_ERROR(message) Log::GetLibLogger()->error(message);
-#define ATCOS_LIB_INFO(message) Log::GetLibLogger()->info(message);
-#define ATCOS_LIB_CRITICAL(message) Log::GetLibLogger()->critical(message);
-#define ATCOS_LIB_LOG(level, message) Log::GetLibLogger()->log(level, message);
+#define ATCOS_LIB_WARN(...) Log::GetLibLogger()->warn(__VA_ARGS__)
+#define ATCOS_LIB_DEBUG(...) Log::GetLibLogger()->debug(__VA_ARGS__)
+#define ATCOS_LIB_TRACE(...) Log::GetLibLogger()->trace(__VA_ARGS__)
+#define ATCOS_LIB_ERROR(...) Log::GetLibLogger()->error(__VA_ARGS__)
+#define ATCOS_LIB_INFO(...) Log::GetLibLogger()->info(__VA_ARGS__)
+#define ATCOS_LIB_CRITICAL(...) Log::GetLibLogger()->critical(__VA_ARGS__)
+#define ATCOS_LIB_LOG(level, ...) Log::GetLibLogger()->log(level, __VA_ARGS__)
