@@ -17,6 +17,8 @@ option(ENABLE_CLANG_TIDY "Enable clang-tidy linting" ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+configure_file(${CMAKE_SOURCE_DIR}/GameConfiguration.toml ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/GameConfiguration.toml COPYONLY)
+
 if(ENABLE_CLANG_TIDY)
     find_program(CLANG_TIDY_EXE NAMES clang-tidy)
     if(CLANG_TIDY_EXE)

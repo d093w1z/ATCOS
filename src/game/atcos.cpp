@@ -1,39 +1,61 @@
 #include "atcos.hpp"
-
 #include <spdlog/spdlog.h>
-
-#include <SFML/Graphics.hpp>
-
+#include "config.hpp"
 #include "core/core.hpp"
 #include "log.hpp"
 
 ATCOSApp::ATCOSApp()
 {
     Log::Init();
+    ATCOS_INFO("Game Starting Up");
+    AppConfig config;
     Radar r;
 
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
-    window.setFramerateLimit(144);
-    window.setPosition(sf::Vector2i(100, 100));
-    ATCOS_INFO("Started application");
+    config.parseFile("GameConfiguration.toml");
+    Settings& settings = config.GetSettings();
 
-    while (window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-            {
-                window.close();
-                ATCOS_INFO("Window closed");
-            }
-        }
 
-        window.clear();
-        window.display();
-    }
+    mWindow = sf::RenderWindow(sf::VideoMode({settings.Window.Width, settings.Window.Height}),
+                               settings.Window.Title);
+    mWindow.setFramerateLimit(144);
+    mWindow.setPosition(sf::Vector2i(100, 100));
 }
 
 ATCOSApp::~ATCOSApp()
 {
-    ATCOS_INFO("Shutdown");
+    ATCOS_INFO("Game Shutdown");
+}
+
+void ATCOSApp::RunLoop()
+{
+    sf::RectangleShape rect[5];
+    int i = 0, j = 50, l = 0;
+    while (mWindow.isOpen())
+    {
+        while (const std::optional event = mWindow.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                mWindow.close();
+                ATCOS_INFO("Window closed");
+            }
+        }
+
+        mWindow.clear();
+
+        while (l < sizeof(rect) / sizeof(rect[0]))
+        {
+            rect[l].setSize(sf::Vector2f(20, 20));
+            rect[l].setPosition(sf::Vector2f(i, j));
+            mWindow.draw(rect[l]);
+            i += 25;
+            l++;
+        }
+        j++;
+        // Reset variables.
+        l = 0;
+        i = 0;
+        // Copy the buffer to the mWindow.
+        mWindow.display();
+    }
 }
