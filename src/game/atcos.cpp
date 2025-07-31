@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "core/core.hpp"
 #include "log.hpp"
+#include <tracy/Tracy.hpp>
 
 ATCOSApp::ATCOSApp()
 {
@@ -46,7 +47,7 @@ void ATCOSApp::RunLoop()
         while (l < sizeof(rect) / sizeof(rect[0]))
         {
             rect[l].setSize(sf::Vector2f(20, 20));
-            rect[l].setPosition(sf::Vector2f(i, j));
+            rect[l].setPosition(sf::Vector2f((float)i, (float)j));
             mWindow.draw(rect[l]);
             i += 25;
             l++;
@@ -57,5 +58,6 @@ void ATCOSApp::RunLoop()
         i = 0;
         // Copy the buffer to the mWindow.
         mWindow.display();
+        FrameMark;
     }
 }
