@@ -1,3 +1,4 @@
+#pragma once
 #include <filesystem>
 
 struct Settings
@@ -7,6 +8,8 @@ struct Settings
         unsigned int Height = 0;
         unsigned int Width = 0;
         unsigned int FPS = 0;
+        int PositionX;
+        int PositionY;
         std::string Title = "";
     } Window;
 };
