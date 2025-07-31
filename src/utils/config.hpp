@@ -21,5 +21,5 @@ class AppConfig
     ~AppConfig();
     static void parseFile(const std::filesystem::path&);
 
-    Settings& AppConfig::GetSettings();
+    Settings& GetSettings();
 };
