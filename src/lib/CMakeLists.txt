@@ -5,7 +5,7 @@ file(GLOB_RECURSE UTIL_SRC_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/utils
 # Create a shared or static library
 add_library(ATCOS_lib ${LIB_SRC_FILES} ${UTIL_SRC_FILES})
 target_include_directories(ATCOS_lib PUBLIC ${CMAKE_SOURCE_DIR}/src/lib ${CMAKE_SOURCE_DIR}/src/utils)
-target_link_libraries(ATCOS_lib PUBLIC spdlog tomlplusplus::tomlplusplus)
+target_link_libraries(ATCOS_lib PUBLIC spdlog tomlplusplus::tomlplusplus PUBLIC TracyClient)
 
 # Platform-specific flags (optional)
 if (WIN32)
