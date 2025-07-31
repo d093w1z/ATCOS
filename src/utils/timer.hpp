@@ -43,7 +43,7 @@ class ScopedTimer
     ~ScopedTimer()
     {
         float time = m_Timer.ElapsedMillis();
-        ATCOS_LIB_DEBUG("{} - {}ms\n", m_Name, time);
+        ATCOS_DEBUG("{} - {}ms", m_Name, time);
     }
 
    private:

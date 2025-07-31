@@ -1,4 +1,7 @@
 #include "aircraft.hpp"
+#include <sstream>
+#include "log.hpp"
+#include "math.h"
 
 SquawkCode::SquawkCode(unsigned int a, unsigned int b, unsigned int c, unsigned int d)
 {
@@ -83,6 +86,16 @@ Aircraft::Aircraft(/* args */) {}
 
 Aircraft::~Aircraft() {}
 
+void Aircraft::Update(float dt)
+{
+    float rad = mState.heading * 3.14159265f / 180.f;
+    SetPosition(mState.position.Lat + dt * mState.speed * std::cos(rad),
+                mState.position.Long + dt * mState.speed * std::sin(rad));
+    ATCOS_LIB_DEBUG("Aircraft: ({}):{},{}", mState.speed, mState.position.Lat,
+                    mState.position.Long);
+    NotifyStateChanged();
+}
+
 unsigned int Aircraft::GetFlightLevel() const
 {
     return mState.flightLevel;
@@ -96,4 +109,48 @@ std::string Aircraft::GetSquawkCode() const
 float Aircraft::GetHeading() const
 {
     return mState.heading;
+}
+
+float Aircraft::GetSpeed() const
+{
+    return mState.speed;
+}
+
+const AircraftState::_position& Aircraft::GetPosition() const
+{
+    return mState.position;
+}
+
+void Aircraft::SetSquawkCode(const std::string& inputCode)
+{
+    mState.squawkCode.Set(inputCode);
+    NotifyStateChanged();
+}
+
+void Aircraft::SetHeading(float h)
+{
+    if (h >= 360)
+        h -= 360;
+    else if (h < 0)
+        h += 360;
+    mState.heading = h;
+    NotifyStateChanged();
+}
+
+void Aircraft::SetSpeed(float s)
+{
+    mState.speed = s;
+    NotifyStateChanged();
+}
+
+void Aircraft::SetPosition(float latitude, float longitude)
+{
+    mState.position = {latitude, longitude};
+    NotifyStateChanged();
+}
+
+void Aircraft::SetFlightLevel(unsigned int fl)
+{
+    mState.flightLevel = fl;
+    NotifyStateChanged();
 }

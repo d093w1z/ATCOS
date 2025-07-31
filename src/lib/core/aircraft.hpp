@@ -1,5 +1,5 @@
+#include <functional>
 #include <iostream>
-#include <sstream>
 #include <string>
 
 #ifndef AIRCRAFT_HPP
@@ -15,17 +15,18 @@ class SquawkCode
 
     SquawkCode(unsigned int a, unsigned int b, unsigned int c, unsigned int d);
 
-    bool IsValid() const;
+    [[nodiscard]] bool IsValid() const;
 
-    static bool IsValid(unsigned int a, unsigned int b, unsigned int c, unsigned int d);
+    [[nodiscard]] static bool IsValid(unsigned int a, unsigned int b, unsigned int c,
+                                      unsigned int d);
 
     void Set(unsigned int a, unsigned int b, unsigned int c, unsigned int d);
 
     void Set(const std::string& input);
 
-    std::string GetString() const;
+    [[nodiscard]] std::string GetString() const;
 
-    int GetAsInt() const;
+    [[nodiscard]] int GetAsInt() const;
 
     friend std::ostream& operator<<(std::ostream& outs, const SquawkCode& s);
 
@@ -37,26 +38,54 @@ class SquawkCode
 struct AircraftState
 {
     SquawkCode squawkCode;
+    float speed = 0;
     float heading = 0;
     unsigned int flightLevel = 0;
+    struct _position
+    {
+        float Lat = 0;
+        float Long = 0;
+    } position;
 };
 
 class Aircraft
 {
-   private:
+   public:
     AircraftState mState;
+    std::vector<std::function<void(const AircraftState&)>> m_onStateChanged;
+
+    void NotifyStateChanged()
+    {
+        for (auto& cb : m_onStateChanged)
+        {
+            cb(mState);
+        }
+    }
+
+    void RegisterOnStateChanged(const std::function<void(const AircraftState&)>& callback)
+    {
+        m_onStateChanged.push_back(callback);
+    }
 
    public:
     Aircraft(/* args */);
     ~Aircraft();
 
-    void SetSquawkCode();
-    std::string GetSquawkCode() const;
+    void Update(float);
 
-    void SetHeading();
-    float GetHeading() const;
+    void SetSquawkCode(const std::string&);
+    [[nodiscard]] std::string GetSquawkCode() const;
 
-    void SetFlightLevel();
-    unsigned int GetFlightLevel() const;
+    void SetHeading(float);
+    [[nodiscard]] float GetHeading() const;
+
+    void SetSpeed(float);
+    [[nodiscard]] float GetSpeed() const;
+
+    void SetFlightLevel(unsigned int);
+    [[nodiscard]] unsigned int GetFlightLevel() const;
+
+    void SetPosition(float, float);
+    [[nodiscard]] const AircraftState::_position& GetPosition() const;
 };
 #endif

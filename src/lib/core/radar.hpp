@@ -5,10 +5,11 @@
 
 class Radar
 {
-   private:
-    std::vector<Aircraft*> entities;
+   public:
+    std::vector<Aircraft> entities;
 
    public:
     Radar(/* args */);
     ~Radar();
+    void Update(float);
 };

@@ -7,8 +7,8 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 # Set Tracy defines
 set(TRACY_ENABLE)
-set(TRACY_VERBOSE)
-set(TRACY_ON_DEMAND)
+set(TRACY_VERBOSE ON)
+set(TRACY_ON_DEMAND ON)
 
 add_subdirectory(src)
 
