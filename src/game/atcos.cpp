@@ -1,9 +1,12 @@
 #include "atcos.hpp"
 #include <spdlog/spdlog.h>
+#include <SFML/Window.hpp>
+#include <SFML/Window/WindowEnums.hpp>
 #include "config.hpp"
 #include "core/core.hpp"
 #include "log.hpp"
 #include <tracy/Tracy.hpp>
+#include "timer.hpp"
 
 ATCOSApp::ATCOSApp()
 {
@@ -15,11 +18,10 @@ ATCOSApp::ATCOSApp()
     config.parseFile("GameConfiguration.toml");
     Settings& settings = config.GetSettings();
 
-
     mWindow = sf::RenderWindow(sf::VideoMode({settings.Window.Width, settings.Window.Height}),
-                               settings.Window.Title);
-    mWindow.setFramerateLimit(144);
-    mWindow.setPosition(sf::Vector2i(100, 100));
+                               settings.Window.Title, sf::Style::Resize, sf::State::Fullscreen);
+    mWindow.setFramerateLimit(settings.Window.FPS);
+    mWindow.setPosition(sf::Vector2i({settings.Window.PositionX, settings.Window.PositionY}));
 }
 
 ATCOSApp::~ATCOSApp()
@@ -33,6 +35,7 @@ void ATCOSApp::RunLoop()
     int i = 0, j = 50, l = 0;
     while (mWindow.isOpen())
     {
+        ScopedTimer st("Update Loop");
         while (const std::optional event = mWindow.pollEvent())
         {
             if (event->is<sf::Event::Closed>())

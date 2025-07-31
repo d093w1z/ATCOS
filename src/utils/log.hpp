@@ -1,15 +1,17 @@
+#pragma once
 #include <spdlog/spdlog.h>
-
 class Log
 {
    public:
     static void Init();
     inline static std::shared_ptr<spdlog::logger>& GetGameLogger()
     {
+        if (!sGameLogger) Init();
         return sGameLogger;
     };
     inline static std::shared_ptr<spdlog::logger>& GetLibLogger()
     {
+        if (!sLibLogger) Init();
         return sLibLogger;
     };
 

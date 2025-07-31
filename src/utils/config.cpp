@@ -30,5 +30,10 @@ void AppConfig::parseFile(const std::filesystem::path& filePath)
     mSettings.Window.Title = tbl["Window"]["Title"].value_or("ATCOS Game");
     mSettings.Window.Height = tbl["Window"]["Height"].value_or(1080u);
     mSettings.Window.Width = tbl["Window"]["Width"].value_or(1920u);
+    mSettings.Window.FPS = tbl["Window"]["FPS"].value_or(144);
+
+    mSettings.Window.PositionX = tbl["Window"]["PositionX"].value_or(0);
+    mSettings.Window.PositionY = tbl["Window"]["PositionY"].value_or(0);
+
     return;
 }
