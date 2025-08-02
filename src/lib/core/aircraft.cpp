@@ -8,6 +8,15 @@ SquawkCode::SquawkCode(unsigned int a, unsigned int b, unsigned int c, unsigned 
     Set(a, b, c, d);
 }
 
+SquawkCode::SquawkCode(const std::string& input) {
+    Set(input);
+}
+
+SquawkCode::SquawkCode(const char* input)
+{
+    Set(input);
+}
+
 bool SquawkCode::IsValid() const
 {
     return IsValid(A, B, C, D);
@@ -82,6 +91,16 @@ std::string to_string(const SquawkCode& s)
     return s.GetString();
 }
 
+bool SquawkCode::operator==(const SquawkCode& other) const
+{
+    return (A == other.A && B == other.B && C == other.C && D == other.D);
+}
+
+bool SquawkCode::operator<(const SquawkCode& other) const
+{
+    return GetAsInt() < other.GetAsInt();
+}
+
 Aircraft::Aircraft(/* args */) {}
 
 Aircraft::~Aircraft() {}
@@ -91,8 +110,8 @@ void Aircraft::Update(float dt)
     float rad = mState.heading * 3.14159265f / 180.f;
     SetPosition(mState.position.Lat + dt * mState.speed * std::cos(rad),
                 mState.position.Long + dt * mState.speed * std::sin(rad));
-    ATCOS_LIB_DEBUG("Aircraft: ({}):{},{}", mState.speed, mState.position.Lat,
-                    mState.position.Long);
+    //ATCOS_LIB_DEBUG("Aircraft: ({}):{},{}", mState.speed, mState.position.Lat,
+    //                mState.position.Long);
     NotifyStateChanged();
 }
 
@@ -140,7 +159,7 @@ void Aircraft::SetHeading(float h)
 void Aircraft::SetSpeed(float s)
 {
     mState.speed = s;
-    NotifyStateChanged();
+    //NotifyStateChanged();
 }
 
 void Aircraft::SetPosition(float latitude, float longitude)
@@ -152,5 +171,5 @@ void Aircraft::SetPosition(float latitude, float longitude)
 void Aircraft::SetFlightLevel(unsigned int fl)
 {
     mState.flightLevel = fl;
-    NotifyStateChanged();
+    //NotifyStateChanged();
 }

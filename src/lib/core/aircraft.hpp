@@ -13,6 +13,10 @@ class SquawkCode
    public:
     SquawkCode() = default;
 
+    SquawkCode(const std::string& input);
+
+    SquawkCode(const char* input);
+
     SquawkCode(unsigned int a, unsigned int b, unsigned int c, unsigned int d);
 
     [[nodiscard]] bool IsValid() const;
@@ -28,11 +32,16 @@ class SquawkCode
 
     [[nodiscard]] int GetAsInt() const;
 
+    bool operator==(const SquawkCode& other) const;
+    bool operator<(const SquawkCode& other) const;
+
+    
     friend std::ostream& operator<<(std::ostream& outs, const SquawkCode& s);
 
     friend std::istream& operator>>(std::istream& ins, SquawkCode& s);
 
     friend std::string to_string(const SquawkCode& s);
+
 };
 
 struct AircraftState

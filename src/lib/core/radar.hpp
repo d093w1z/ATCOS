@@ -1,15 +1,16 @@
 #pragma once
-#include <vector>
+#include <map>
 
 #include "aircraft.hpp"
 
 class Radar
 {
-   public:
-    std::vector<Aircraft> entities;
+   private:
+    std::map<SquawkCode, Aircraft> entities;
 
    public:
     Radar(/* args */);
     ~Radar();
+    [[nodiscard]] std::map<SquawkCode, Aircraft>& GetEntities();
     void Update(float);
 };

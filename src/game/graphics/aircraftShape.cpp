@@ -15,10 +15,10 @@ AircraftShape::AircraftShape(float size, float angleDeg)
 }
 
 AircraftShape::AircraftShape(AircraftShape& as) {}
-AircraftShape::AircraftShape(Aircraft& a, float size)
+AircraftShape::AircraftShape(Aircraft* a, float size)
     : m_size(size), mBody(sf::PrimitiveType::LineStrip, 5), mTail(sf::PrimitiveType::Lines, 2)
 {
-    mAircraft = &a;
+    mAircraft = a;
     mTrailTimer = std::chrono::steady_clock().now();
     mAircraft->RegisterOnStateChanged([this](const AircraftState& state) { update(); });
     update();
@@ -37,7 +37,6 @@ void AircraftShape::update()
 {
     float s = m_size;
     float half = s / 2;
-    // ATCOS_DEBUG(mTrail.size());
 
     sf::Vector2f center = {mAircraft->GetPosition().Lat, mAircraft->GetPosition().Long};
     if (mAircraft->GetSpeed() != 0)
@@ -53,21 +52,13 @@ void AircraftShape::update()
             mTrail.front().setFillColor(sf::Color(100, 100, 100));
             mTrailTimer = std::chrono::steady_clock().now();
         }
-        // mTrail.front().setOutlineThickness(0);
         if (mTrail.size() > 10)
         {
             mTrail.pop_back();
         }
-        ATCOS_DEBUG("AircraftShape: \n\ttrail: ({})\n\tspeed({})\n\tpos:{},{}\n\telapsed:{}",
-                    mTrail.size(), mAircraft->GetSpeed(), mAircraft->GetPosition().Lat,
-                    mAircraft->GetPosition().Long, elapsed);
     }
     else
     {
-        // ATCOS_DEBUG("Trail Cleared!");
-        // ATCOS_DEBUG("AircraftShape: ({}):{},{}", mAircraft->GetSpeed(),
-        // mAircraft->GetPosition().Lat,
-        //             mAircraft->GetPosition().Long);
         mTrail.clear();
     }
 

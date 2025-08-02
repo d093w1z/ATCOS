@@ -11,7 +11,7 @@ class AircraftShape : public sf::Drawable
 {
    public:
     AircraftShape(AircraftShape&);
-    AircraftShape(Aircraft&, float size = 100.f);
+    AircraftShape(Aircraft*, float size = 100.f);
 
    public:
     AircraftShape(float size = 100.f, float angleDeg = 90.f);
