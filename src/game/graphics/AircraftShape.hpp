@@ -1,19 +1,26 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <chrono>
 #include <cmath>
-#include <queue>
+#include <deque>
 #include "core/aircraft.hpp"
 
 class AircraftShape : public sf::Drawable
 {
    public:
-    AircraftShape(AircraftShape&);
+    AircraftShape(const AircraftShape&);
     AircraftShape(Aircraft*, float size = 100.f);
 
    public:
+    void Initialize();
+    void InitializeFont();
+    void InitializeAircraft(Aircraft*);
+
+    const std::wstring GetStateLabel() const;
+
     AircraftShape(float size = 100.f, float angleDeg = 90.f);
 
     void setSize(float size)
@@ -29,8 +36,11 @@ class AircraftShape : public sf::Drawable
         std::chrono::steady_clock::now();
 
     sf::VertexArray mBody;
-    sf::VertexArray mTail;
+    sf::VertexArray mHeadingIndicator;
     std::deque<sf::CircleShape> mTrail;
+    sf::CircleShape mRing;
+    sf::Text mLabel;
+    sf::Font mFont;
 
     void update();
 

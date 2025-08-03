@@ -1,13 +1,19 @@
 #include "atcos.hpp"
 #include <spdlog/spdlog.h>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Shape.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/System/String.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowEnums.hpp>
+#include <memory>
 #include <tracy/Tracy.hpp>
 #include "config.hpp"
-#include "graphics/aircraftShape.hpp"
+#include "graphics/AircraftShape.hpp"
+#include "graphics/RadarControl.hpp"
+#include "graphics/RenderEngine.hpp"
 #include "log.hpp"
 #include "timer.hpp"
 
@@ -21,9 +27,14 @@ ATCOSApp::ATCOSApp()
     Settings& settings = config.GetSettings();
 
     mWindow = sf::RenderWindow(sf::VideoMode({settings.Window.Width, settings.Window.Height}),
-                               settings.Window.Title, sf::Style::Resize);
+                               settings.Window.Title, sf::Style::Default);
     mWindow.setFramerateLimit(settings.Window.FPS);
     mWindow.setPosition(sf::Vector2i({settings.Window.PositionX, settings.Window.PositionY}));
+
+    // Initialize RadarControl & RenderEngine
+    mRenderEngine = std::make_shared<RenderEngine>();
+    mRadar = std::make_shared<RadarControl>();
+    mRadar->AddRenderEngine(mRenderEngine);
 }
 
 ATCOSApp::~ATCOSApp()
@@ -36,7 +47,7 @@ void ATCOSApp::RunLoop()
     ZoneScoped;
     sf::View view = mWindow.getDefaultView();
 
-    mRenderer.AddDrawables(mRadar);
+    mRadar->DrawEntities();
 
     int i = 0, j = 50, l = 0;
     float dt = 1.f / 144.f;
@@ -57,21 +68,14 @@ void ATCOSApp::RunLoop()
                 view.setCenter({view.getSize().x / 2.f, view.getSize().y / 2.f});
                 mWindow.setView(view);
             }
-            mRenderer.handleInput(event, mRadar);
+            mRadar->HandleInputs(event);
         }
 
-        mWindow.clear();
+        mWindow.clear(sf::Color());
 
-        mRenderer.Update(mRadar, dt);
-        mRenderer.draw(mWindow);
+        mRadar->Update(dt);
+        mRenderEngine->draw(mWindow);
 
-        auto viewCenter = view.getCenter();
-        auto viewSize = view.getSize();
-
-        sf::Vector2f topLeft(viewCenter.x - viewSize.x / 2.f, viewCenter.y - viewSize.y / 2.f);
-        sf::Vector2f bottomRight(viewCenter.x + viewSize.x / 2.f, viewCenter.y + viewSize.y / 2.f);
-
-        
         mWindow.display();
         FrameMark;
     }

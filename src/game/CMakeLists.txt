@@ -8,3 +8,12 @@ target_include_directories(ATCOS PUBLIC ${CMAKE_SOURCE_DIR}/src/game ${CMAKE_SOU
 
 # Set folders for IDEs (like VS or CLion)
 set_target_properties(ATCOS PROPERTIES FOLDER "Executables")
+
+
+# Copy assets to bin/ directory after build
+add_custom_command(
+    TARGET ATCOS POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/assets
+            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets
+)

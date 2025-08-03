@@ -1,6 +1,6 @@
 #include "radar.hpp"
-#include "log.hpp"
 #include <random>
+#include "log.hpp"
 
 Radar::Radar(/* args */)
 {
@@ -17,16 +17,12 @@ Radar::Radar(/* args */)
     ATCOS_LIB_INFO("Radar Initialized!");
     for (int i = 0; i < 5; i++)
     {
-        SquawkCode s({
-            (unsigned int) squawkDist(gen),
-            (unsigned int) squawkDist(gen),
-            (unsigned int) squawkDist(gen),
-            (unsigned int) squawkDist(gen),
-        });
+        SquawkCode s((unsigned int) squawkDist(gen), (unsigned int) squawkDist(gen),
+                     (unsigned int) squawkDist(gen), (unsigned int) squawkDist(gen));
         entities[s] = Aircraft();
         entities[s].SetSquawkCode(s.GetString());
     }
-        //ATCOS_LIB_INFO("Aircrafts Added");
+    // ATCOS_LIB_INFO("Aircrafts Added");
     for (auto& [key, value] : entities)
     {
         value.SetFlightLevel(5);
@@ -47,7 +43,7 @@ void Radar::Update(float dt)
 {
     for (auto& [key, value] : entities)
     {
-        //value.SetHeading(value.GetHeading() + dt * value.GetSpeed());
+        // value.SetHeading(value.GetHeading() + dt * value.GetSpeed());
         value.Update(dt);
     }
 }

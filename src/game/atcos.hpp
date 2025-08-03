@@ -1,14 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "core/radar.hpp"
-#include "graphics/renderer.hpp"
+#include <memory>
+#include "graphics/RadarControl.hpp"
+#include "graphics/RenderEngine.hpp"
+
 class ATCOSApp
 {
    private:
     bool IsRunning = false;
     sf::RenderWindow mWindow;
-    Radar mRadar;
-    Renderer mRenderer;
+
+    std::shared_ptr<RadarControl> mRadar;
+    std::shared_ptr<RenderEngine> mRenderEngine;
 
    public:
     ATCOSApp();
