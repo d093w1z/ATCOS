@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
@@ -8,30 +9,34 @@
 #include <deque>
 #include "core/aircraft.hpp"
 
-class AircraftShape : public sf::Drawable
+class AircraftShape : public Aircraft, public sf::Drawable
 {
    public:
     AircraftShape(const AircraftShape&);
-    AircraftShape(Aircraft*, float size = 100.f);
+    AircraftShape(float size = 10.f, float angleDeg = 90.f);
 
    public:
     void Initialize();
     void InitializeFont();
-    void InitializeAircraft(Aircraft*);
+    // void InitializeAircraft(Aircraft*);
 
     const std::wstring GetStateLabel() const;
 
-    AircraftShape(float size = 100.f, float angleDeg = 90.f);
-
-    void setSize(float size)
+    void SetSize(float size)
     {
-        m_size = size;
+        mSize = size;
         update();
     }
 
+    bool ContainsPoint(const sf::Vector2f& point) const;
+    void SetSelected(bool state)
+    {
+        mSelected = state;
+    }
+
    private:
-    float m_size;
-    Aircraft* mAircraft;
+    float mSize;
+    // Aircraft* mAircraft;
     std::chrono::time_point<std::chrono::steady_clock> mTrailTimer =
         std::chrono::steady_clock::now();
 
@@ -41,8 +46,8 @@ class AircraftShape : public sf::Drawable
     sf::CircleShape mRing;
     sf::Text mLabel;
     sf::Font mFont;
+    bool mSelected;
 
-    void update();
-
+    virtual void update() override;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

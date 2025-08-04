@@ -104,11 +104,24 @@ bool SquawkCode::operator<(const SquawkCode& other) const
 
 Aircraft::Aircraft(/* args */) {}
 
-Aircraft::~Aircraft() {}
+float lerp(float v0, float v1, float t)
+{
+    return (1 - t) * v0 + t * v1;
+}
+
+float lerp_clamp_angle(float v0, float v1, float t)
+{
+    float delta = fmodf((v1 - v0 + 540.0f), 360.0f) - 180.0f;
+    return fmodf((v0 + delta * t + 360.0f), 360.0f);
+}
 
 void Aircraft::Update(float dt)
 {
     float rad = mState.heading * 3.14159265f / 180.f;
+    SetSpeed(lerp(GetSpeed(), GetTargetSpeed(), dt));
+    SetHeading(lerp_clamp_angle(GetHeading(), GetTargetHeading(), dt));
+    SetFlightLevel(lerp(GetFlightLevel(), GetTargetFlightLevel(), dt));
+
     SetPosition(mState.position.Lat + dt * mState.speed * std::sin(rad),
                 mState.position.Long - dt * mState.speed * std::cos(rad));
     // ATCOS_LIB_DEBUG("Aircraft: ({}):{},{}", mState.speed, mState.position.Lat,
@@ -140,6 +153,21 @@ const AircraftState::_position& Aircraft::GetPosition() const
     return mState.position;
 }
 
+unsigned int Aircraft::GetTargetFlightLevel() const
+{
+    return mTargetState.flightLevel;
+}
+
+float Aircraft::GetTargetHeading() const
+{
+    return mTargetState.heading;
+}
+
+float Aircraft::GetTargetSpeed() const
+{
+    return mTargetState.speed;
+}
+
 void Aircraft::SetSquawkCode(const std::string& inputCode)
 {
     mState.squawkCode.Set(inputCode);
@@ -157,7 +185,18 @@ void Aircraft::SetHeading(float h)
 
 void Aircraft::SetSpeed(float s)
 {
+    if (s < 0)
+    {
+        mState.speed = 0;
+        return;
+    }
     mState.speed = s;
+    NotifyStateChanged();
+}
+
+void Aircraft::SetFlightLevel(unsigned int fl)
+{
+    mState.flightLevel = fl;
     NotifyStateChanged();
 }
 
@@ -167,8 +206,29 @@ void Aircraft::SetPosition(float latitude, float longitude)
     NotifyStateChanged();
 }
 
-void Aircraft::SetFlightLevel(unsigned int fl)
+void Aircraft::SetTargetHeading(float h)
 {
-    mState.flightLevel = fl;
+    if (h >= 360)
+        h -= 360;
+    else if (h < 0)
+        h += 360;
+    mTargetState.heading = h;
+    NotifyStateChanged();
+}
+
+void Aircraft::SetTargetSpeed(float s)
+{
+    if (s < 0)
+    {
+        mTargetState.speed = 0;
+        return;
+    }
+    mTargetState.speed = s;
+    NotifyStateChanged();
+}
+
+void Aircraft::SetTargetFlightLevel(unsigned int fl)
+{
+    mTargetState.flightLevel = fl;
     NotifyStateChanged();
 }

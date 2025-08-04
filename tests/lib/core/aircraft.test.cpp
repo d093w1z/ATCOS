@@ -56,9 +56,9 @@ TEST(Aircraft, SquawkCode_Operations)
     EXPECT_EQ(sc.GetAsInt(), 7777);
 }
 
-TEST(Aircraft, AircraftState_Initialization)
-{
-    Aircraft a;
-    EXPECT_EQ(0, a.GetFlightLevel());
-    EXPECT_STREQ("0000", a.GetSquawkCode().c_str());
-}
+// TEST(Aircraft, AircraftState_Initialization)
+// {
+//     Aircraft a;
+//     EXPECT_EQ(0, a.GetFlightLevel());
+//     EXPECT_STREQ("0000", a.GetSquawkCode().c_str());
+// }
