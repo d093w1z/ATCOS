@@ -2,6 +2,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <chrono>
@@ -11,12 +12,20 @@ void AircraftShape::Initialize()
 {
     InitializeFont();
     mTrailTimer = std::chrono::steady_clock().now();
-}
 
-void AircraftShape::InitializeAircraft(Aircraft* a)
-{
-    mAircraft = a;
-    mAircraft->RegisterOnStateChanged([this](const AircraftState& state) { update(); });
+    mRing.setFillColor(sf::Color::Transparent);
+    mRing.setRadius(mSize * 1.5);
+    mRing.setOutlineColor(sf::Color::Blue);
+    mRing.setOutlineThickness(3);
+    sf::FloatRect ringRect = mRing.getLocalBounds();
+    mRing.setOrigin(ringRect.getCenter());
+
+    for (int i = 0; i < 5; i++)
+    {
+        mBody[i].color = sf::Color::Green;
+    }
+
+    mHeadingIndicator[0].color = mHeadingIndicator[1].color = sf::Color{0, 255, 0, 127};
 }
 
 void AircraftShape::InitializeFont()
@@ -29,8 +38,9 @@ void AircraftShape::InitializeFont()
     mLabel.setCharacterSize(12);
     mLabel.setFillColor(sf::Color::Green);
 }
+
 AircraftShape::AircraftShape(float size, float angleDeg)
-    : m_size(size),
+    : mSize(size),
       mBody(sf::PrimitiveType::LineStrip, 5),
       mHeadingIndicator(sf::PrimitiveType::Lines, 2),
       mLabel(mFont)
@@ -44,16 +54,6 @@ AircraftShape::AircraftShape(const AircraftShape& as) : mLabel(mFont)
 {
     Initialize();
 }
-AircraftShape::AircraftShape(Aircraft* a, float size)
-    : m_size(size),
-      mBody(sf::PrimitiveType::LineStrip, 5),
-      mHeadingIndicator(sf::PrimitiveType::Lines, 2),
-      mLabel(mFont)
-{
-    Initialize();
-    InitializeAircraft(a);
-    mTrailTimer = std::chrono::steady_clock().now();
-}
 
 void AircraftShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -61,23 +61,21 @@ void AircraftShape::draw(sf::RenderTarget& target, sf::RenderStates states) cons
     {
         target.draw(it, states);
     }
-    sf::Vector2f center = {mAircraft->GetPosition().Lat, mAircraft->GetPosition().Long};
-
-    sf::CircleShape ring(m_size);
-
-    // target.draw(mRing);
+    sf::Vector2f center = {GetPosition().Lat, GetPosition().Long};
 
     target.draw(mBody, states);
     target.draw(mHeadingIndicator, states);
+    target.draw(mRing);
     target.draw(mLabel);
 }
+
 void AircraftShape::update()
 {
-    float s = m_size;
+    float s = mSize;
     float half = s / 2;
 
-    sf::Vector2f center = {mAircraft->GetPosition().Lat, mAircraft->GetPosition().Long};
-    if (mAircraft->GetSpeed() != 0)
+    sf::Vector2f center = {GetPosition().Lat, GetPosition().Long};
+    if (GetSpeed() != 0)
     {
         auto now = std::chrono::steady_clock().now();
         auto elapsed =
@@ -112,13 +110,8 @@ void AircraftShape::update()
     mBody[3].position = tr;
     mBody[4].position = tl;  // close square
 
-    for (int i = 0; i < 5; i++)
-    {
-        mBody[i].color = sf::Color::Green;
-    }
-
     // Tail line (from center to angle)
-    float rad = mAircraft->GetHeading() * 3.14159265f / 180.f;
+    float rad = GetHeading() * 3.14159265f / 180.f;
     float tailLength = 2 * s;
 
     sf::Vector2f tailStart = center;
@@ -127,19 +120,14 @@ void AircraftShape::update()
 
     mHeadingIndicator[0].position = tailStart;
     mHeadingIndicator[1].position = tailEnd;
-    mHeadingIndicator[0].color = mHeadingIndicator[1].color = sf::Color{0, 255, 0, 127};
 
-    mRing.setFillColor(sf::Color::Transparent);
-    mRing.setRadius(m_size / 2);
-    mRing.setOutlineColor(sf::Color::Green);
-    mRing.setOutlineThickness(2);
-    mRing.setPosition({center.x - half, center.y - half});
+    mRing.setPosition({center.x, center.y});
+    mRing.setOutlineColor(mSelected ? sf::Color::Magenta : sf::Color::Blue);
 
-    sf::FloatRect textRect = mLabel.getLocalBounds();
-    mLabel.setOrigin({textRect.size.x / 2, textRect.size.y / 2});
-    mLabel.setPosition({center.x - half, center.y - half - 20});
     mLabel.setString(GetStateLabel());
-    mLabel.setPosition({center.x - half - 10, center.y - half - 10});
+    sf::FloatRect textRect = mLabel.getLocalBounds();
+    mLabel.setOrigin({textRect.size.x / 2, textRect.size.y});
+    mLabel.setPosition({center.x, center.y - 20});
 }
 
 const std::wstring AircraftShape::GetStateLabel() const
@@ -147,13 +135,36 @@ const std::wstring AircraftShape::GetStateLabel() const
     std::wostringstream stringStream;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
-    // stringStream << "CODE: " << converter.from_bytes(mAircraft->GetSquawkCode())
-    //              << " | FL: " << mAircraft->GetFlightLevel() << std::endl;
-    // stringStream << "SPD: " << static_cast<int>(mAircraft->GetSpeed()) << "kt"
-    //              << " | HDG: " << static_cast<int>(mAircraft->GetHeading()) << "°";
+    // stringStream << "CODE: " << converter.from_bytes(GetSquawkCode())
+    //              << " | FL: " << GetFlightLevel() << std::endl;
+    // stringStream << "SPD: " << static_cast<int>(GetSpeed()) << "kt"
+    //              << " | HDG: " << static_cast<int>(GetHeading()) << "°";
 
-    stringStream << "[" << converter.from_bytes(mAircraft->GetSquawkCode()) << "]\n";
-    stringStream << static_cast<int>(mAircraft->GetSpeed()) << L"↑" << L"↓";
+    stringStream << "[" << converter.from_bytes(GetSquawkCode()) << "]\n";
+    stringStream << static_cast<int>(GetSpeed())
+                 << ((static_cast<int>(GetSpeed()) == static_cast<int>(GetTargetSpeed()))
+                         ? L"="
+                         : ((GetSpeed() < GetTargetSpeed()) ? L"↑" : L"↓"));
+    stringStream << static_cast<int>(GetTargetSpeed()) << std::endl;
+
+    stringStream << static_cast<int>(GetHeading())
+                 << ((static_cast<int>(GetHeading()) == static_cast<int>(GetTargetHeading()))
+                         ? L"="
+                         : ((GetHeading() < GetTargetHeading()) ? L"↑" : L"↓"));
+    stringStream << static_cast<int>(GetTargetHeading());
 
     return stringStream.str();
+}
+
+bool AircraftShape::ContainsPoint(const sf::Vector2f& point) const
+{
+    // Get the center of the circle in world space
+    sf::Vector2f center = mRing.getTransform().transformPoint(mRing.getOrigin());
+
+    float radius = mRing.getRadius();
+
+    float dx = point.x - center.x;
+    float dy = point.y - center.y;
+
+    return (dx * dx + dy * dy) <= (radius * radius);
 }

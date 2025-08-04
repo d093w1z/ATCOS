@@ -6,6 +6,7 @@
 - DrawEntities
 */
 #include <memory>
+#include "AircraftShape.hpp"
 #include "RenderEngine.hpp"
 #include "core/radar.hpp"
 
@@ -17,8 +18,9 @@ class RadarControl : public Radar
 
     void AddRenderEngine(std::shared_ptr<RenderEngine>);
     void DrawEntities();
-    void HandleInputs(const std::optional<sf::Event>& event);
+    void HandleInputs(const std::optional<sf::Event>& event, const sf::RenderWindow& window);
 
    private:
     std::shared_ptr<RenderEngine> mRenderEngine;
+    std::shared_ptr<AircraftShape> mSelected;
 };

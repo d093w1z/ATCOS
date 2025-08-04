@@ -55,30 +55,31 @@ struct AircraftState
     } position;
 };
 
+struct AircraftTargetState
+{
+    float speed = 0;
+    float heading = 0;
+    unsigned int flightLevel = 0;
+};
+
 class Aircraft
 {
    public:
     AircraftState mState;
+    AircraftTargetState mTargetState;
     std::vector<std::function<void(const AircraftState&)>> m_onStateChanged;
 
     void NotifyStateChanged()
     {
-        for (auto& cb : m_onStateChanged)
-        {
-            cb(mState);
-        }
-    }
-
-    void RegisterOnStateChanged(const std::function<void(const AircraftState&)>& callback)
-    {
-        m_onStateChanged.push_back(callback);
+        update();
     }
 
    public:
     Aircraft(/* args */);
-    ~Aircraft();
+    virtual ~Aircraft() = default;
 
     void Update(float);
+    virtual void update() = 0;
 
     void SetSquawkCode(const std::string&);
     [[nodiscard]] std::string GetSquawkCode() const;
@@ -91,6 +92,15 @@ class Aircraft
 
     void SetFlightLevel(unsigned int);
     [[nodiscard]] unsigned int GetFlightLevel() const;
+
+    void SetTargetHeading(float);
+    [[nodiscard]] float GetTargetHeading() const;
+
+    void SetTargetSpeed(float);
+    [[nodiscard]] float GetTargetSpeed() const;
+
+    void SetTargetFlightLevel(unsigned int);
+    [[nodiscard]] unsigned int GetTargetFlightLevel() const;
 
     void SetPosition(float, float);
     [[nodiscard]] const AircraftState::_position& GetPosition() const;

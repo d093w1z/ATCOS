@@ -68,7 +68,7 @@ void ATCOSApp::RunLoop()
                 view.setCenter({view.getSize().x / 2.f, view.getSize().y / 2.f});
                 mWindow.setView(view);
             }
-            mRadar->HandleInputs(event);
+            mRadar->HandleInputs(event, mWindow);
         }
 
         mWindow.clear(sf::Color());
