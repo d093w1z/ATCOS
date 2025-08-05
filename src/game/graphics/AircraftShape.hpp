@@ -1,11 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Vertex.hpp>
 #include <chrono>
-#include <cmath>
 #include <deque>
 #include "core/aircraft.hpp"
 
@@ -18,7 +15,6 @@ class AircraftShape : public Aircraft, public sf::Drawable
    public:
     void Initialize();
     void InitializeFont();
-    // void InitializeAircraft(Aircraft*);
 
     const std::wstring GetStateLabel() const;
 
@@ -36,7 +32,6 @@ class AircraftShape : public Aircraft, public sf::Drawable
 
    private:
     float mSize;
-    // Aircraft* mAircraft;
     std::chrono::time_point<std::chrono::steady_clock> mTrailTimer =
         std::chrono::steady_clock::now();
 
@@ -46,7 +41,7 @@ class AircraftShape : public Aircraft, public sf::Drawable
     sf::CircleShape mRing;
     sf::Text mLabel;
     sf::Font mFont;
-    bool mSelected;
+    bool mSelected = false;
 
     virtual void update() override;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

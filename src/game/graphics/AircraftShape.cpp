@@ -6,6 +6,10 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <chrono>
+#include <sstream>
+#include <string>
+#include <locale>
+#include <codecvt>
 #include "log.hpp"
 
 void AircraftShape::Initialize()
