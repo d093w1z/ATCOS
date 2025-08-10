@@ -86,6 +86,7 @@
   "[cpp]": {
     "editor.defaultFormatter": "xaver.clang-format"
   },
+  "clangd.arguments": ["--compile-commands-dir=build", "--clang-tidy"],
   "clang-format.style": "file",
   "cSpell.enabledSchemes": {
     "file": false

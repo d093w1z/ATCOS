@@ -4,10 +4,12 @@ project(ATCOS)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-p=${CMAKE_BINARY_DIR}")
+
 
 # Set Tracy defines
 set(TRACY_ENABLE)
-set(TRACY_VERBOSE ON)
+# set(TRACY_VERBOSE ON)
 set(TRACY_ON_DEMAND ON)
 
 add_subdirectory(src)

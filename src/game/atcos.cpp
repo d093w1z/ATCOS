@@ -10,8 +10,6 @@
 #include <SFML/Window/WindowEnums.hpp>
 #include <memory>
 #include <tracy/Tracy.hpp>
-#include "config.hpp"
-#include "graphics/AircraftShape.hpp"
 #include "graphics/RadarControl.hpp"
 #include "graphics/RenderEngine.hpp"
 #include "log.hpp"
@@ -21,10 +19,9 @@ ATCOSApp::ATCOSApp()
 {
     Log::Init();
     ATCOS_INFO("Game Starting Up");
-    AppConfig config;
 
-    config.parseFile("GameConfiguration.toml");
-    Settings& settings = config.GetSettings();
+    mConfig.parseFile("GameConfiguration.toml");
+    Settings& settings = mConfig.GetSettings();
 
     mWindow = sf::RenderWindow(sf::VideoMode({settings.Window.Width, settings.Window.Height}),
                                settings.Window.Title, sf::Style::Default);
@@ -48,9 +45,8 @@ void ATCOSApp::RunLoop()
     sf::View view = mWindow.getDefaultView();
 
     mRadar->DrawEntities();
-
-    int i = 0, j = 50, l = 0;
-    float dt = 1.f / 144.f;
+    Settings& settings = mConfig.GetSettings();
+    float dt = 1.f / settings.Window.FPS;
     while (mWindow.isOpen())
     {
         ScopedTimer st("Update Loop");

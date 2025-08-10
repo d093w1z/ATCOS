@@ -16,3 +16,6 @@ elseif(UNIX)
     target_compile_definitions(ATCOS_lib PRIVATE PLATFORM_LINUX)
 endif()
 set_target_properties(ATCOS_lib PROPERTIES FOLDER "Libraries")
+set_target_properties(ATCOS_lib PROPERTIES
+    CXX_CLANG_TIDY "clang-tidy;-p=${CMAKE_BINARY_DIR}"
+)

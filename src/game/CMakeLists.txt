@@ -8,6 +8,9 @@ target_include_directories(ATCOS PUBLIC ${CMAKE_SOURCE_DIR}/src/game ${CMAKE_SOU
 
 # Set folders for IDEs (like VS or CLion)
 set_target_properties(ATCOS PROPERTIES FOLDER "Executables")
+set_target_properties(ATCOS PROPERTIES
+    CXX_CLANG_TIDY "clang-tidy;-p=${CMAKE_BINARY_DIR}"
+)
 
 
 # Copy assets to bin/ directory after build

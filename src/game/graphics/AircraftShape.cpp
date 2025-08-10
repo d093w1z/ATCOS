@@ -6,10 +6,10 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <chrono>
+#include <codecvt>
+#include <locale>
 #include <sstream>
 #include <string>
-#include <locale>
-#include <codecvt>
 #include "log.hpp"
 
 void AircraftShape::Initialize()
@@ -18,7 +18,7 @@ void AircraftShape::Initialize()
     mTrailTimer = std::chrono::steady_clock().now();
 
     mRing.setFillColor(sf::Color::Transparent);
-    mRing.setRadius(mSize * 1.5);
+    mRing.setRadius(mSize * 1.5f);
     mRing.setOutlineColor(sf::Color::Blue);
     mRing.setOutlineThickness(3);
     sf::FloatRect ringRect = mRing.getLocalBounds();
@@ -87,7 +87,7 @@ void AircraftShape::update()
 
         if (elapsed >= 100)
         {
-            mTrail.push_front(sf::CircleShape(1));
+            mTrail.emplace_front(1);
             mTrail.front().setPosition(center);
             mTrail.front().setFillColor(sf::Color{0, 255, 0, 127});
             mTrailTimer = std::chrono::steady_clock().now();

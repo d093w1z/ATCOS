@@ -14,7 +14,10 @@ class RadarControl : public Radar
 {
    public:
     RadarControl();
-    ~RadarControl();
+    RadarControl(const RadarControl&) = default;
+    RadarControl(RadarControl&&) = default;
+
+    ~RadarControl() = default;
 
     void AddRenderEngine(std::shared_ptr<RenderEngine>);
     void DrawEntities();

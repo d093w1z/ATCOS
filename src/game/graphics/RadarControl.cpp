@@ -11,12 +11,12 @@ RadarControl::RadarControl()
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_real_distribution<> speedDist(0, 15);
-    std::uniform_real_distribution<> headingDist(0, 360);
+    std::uniform_real_distribution<float> speedDist(0, 15);
+    std::uniform_real_distribution<float> headingDist(0, 360);
 
     std::uniform_int_distribution<> squawkDist(0, 7);
-    std::uniform_real_distribution<> posXDist(100, 300);
-    std::uniform_real_distribution<> posYDist(100, 300);
+    std::uniform_real_distribution<float> posXDist(100, 300);
+    std::uniform_real_distribution<float> posYDist(100, 300);
 
     ATCOS_LIB_INFO("Radar Initialized!");
     for (int i = 0; i < 10; i++)
@@ -35,7 +35,6 @@ RadarControl::RadarControl()
         value->SetPosition(posXDist(gen), posYDist(gen));
     }
 }
-RadarControl::~RadarControl() {}
 
 void RadarControl::AddRenderEngine(std::shared_ptr<RenderEngine> re)
 {
