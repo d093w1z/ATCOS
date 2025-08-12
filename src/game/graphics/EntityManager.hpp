@@ -2,10 +2,14 @@
 #include <memory>
 #include <unordered_map>
 #include "Entity.hpp"
+#include "graphics/EventDispatcher.hpp"
 
 class EntityManager
 {
    public:
+    void HandleInputs(std::shared_ptr<EventDispatcher> eventDispatcher,
+                      const std::optional<sf::Event>& event, const sf::RenderWindow& window);
+
     void registerEntity(std::shared_ptr<IEntity> entity)
     {
         entities[entity->getId()] = entity;

@@ -29,7 +29,9 @@ ATCOSApp::ATCOSApp()
 
     // Initialize RadarControl & EntityManager
     mEntityManager = std::make_shared<EntityManager>();
-    mRadar = std::make_shared<RadarControl>(mEntityManager);
+    mEventDispatcher = std::make_shared<EventDispatcher>();
+
+    mRadar = std::make_shared<RadarControl>(mEntityManager, mEventDispatcher);
 }
 
 ATCOSApp::~ATCOSApp()
@@ -64,6 +66,7 @@ void ATCOSApp::RunLoop()
                                 view.getSize().y / VIEW_CENTER_DIVISOR});
                 mWindow.setView(view);
             }
+            mEntityManager->HandleInputs(mEventDispatcher, event, mWindow);
             mRadar->HandleInputs(event, mWindow);
         }
 
