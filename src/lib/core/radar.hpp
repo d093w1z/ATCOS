@@ -6,12 +6,7 @@
 
 class Radar
 {
-   private:
-    std::map<SquawkCode, std::shared_ptr<Aircraft>> entities;
-
    public:
-    Radar(/* args */);
-    ~Radar();
-    [[nodiscard]] std::map<SquawkCode, std::shared_ptr<Aircraft>>& GetEntities();
-    void Update(float);
+    Radar(/* args */) = default;
+    ~Radar() = default;
 };
