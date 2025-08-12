@@ -20,7 +20,7 @@ void AircraftShape::Initialize()
     mRing.setFillColor(sf::Color::Transparent);
     mRing.setRadius(mSize * 1.5f);
     mRing.setOutlineColor(sf::Color::Blue);
-    mRing.setOutlineThickness(3);
+    mRing.setOutlineThickness(2);
     sf::FloatRect ringRect = mRing.getLocalBounds();
     mRing.setOrigin(ringRect.getCenter());
 
