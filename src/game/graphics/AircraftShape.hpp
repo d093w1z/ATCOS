@@ -4,13 +4,18 @@
 #include <SFML/Graphics/Text.hpp>
 #include <chrono>
 #include <deque>
+#include "Entity.hpp"
 #include "core/aircraft.hpp"
 
-class AircraftShape : public Aircraft, public sf::Drawable
+class AircraftShape : public IEntity, public Aircraft
 {
    public:
+    static constexpr float DefaultSize = 10.f;
+    static constexpr float DefaultHeading = 90.f;
+
+    AircraftShape(int id, float size = DefaultSize, float angleDeg = DefaultHeading);
+
     AircraftShape(const AircraftShape&);
-    AircraftShape(float size = 10.f, float angleDeg = 90.f);
 
    public:
     void Initialize();
@@ -43,6 +48,10 @@ class AircraftShape : public Aircraft, public sf::Drawable
     sf::Font mFont;
     bool mSelected = false;
 
-    virtual void update() override;
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void update() override;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void update(float dt) override
+    {
+        Update(dt);
+    }
 };

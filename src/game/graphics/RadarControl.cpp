@@ -3,10 +3,18 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <random>
+#include <utility>
 #include "graphics/AircraftShape.hpp"
 #include "log.hpp"
 
-RadarControl::RadarControl()
+RadarControl::RadarControl(std::shared_ptr<EntityManager> entityManager)
+    : mEntityManager(std::move(entityManager)), mSelected(nullptr)
+{
+    // Initialize the radar with some aircrafts
+    InitializeRadar();
+}
+
+void RadarControl::InitializeRadar()
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -23,34 +31,15 @@ RadarControl::RadarControl()
     {
         SquawkCode s((unsigned int) squawkDist(gen), (unsigned int) squawkDist(gen),
                      (unsigned int) squawkDist(gen), (unsigned int) squawkDist(gen));
-        GetEntities()[s] = std::make_shared<AircraftShape>();
-        GetEntities()[s]->SetSquawkCode(s.GetString());
+        auto aircraft = std::make_shared<AircraftShape>(i);
+        aircraft->SetSquawkCode(s.GetString());
+        aircraft->SetTargetFlightLevel(5);
+        aircraft->SetTargetHeading(headingDist(gen));
+        aircraft->SetTargetSpeed(speedDist(gen));
+        aircraft->SetPosition(posXDist(gen), posYDist(gen));
+        mEntityManager->registerEntity(aircraft);
     }
     // ATCOS_LIB_INFO("Aircrafts Added");
-    for (auto& [key, value] : GetEntities())
-    {
-        value->SetTargetFlightLevel(5);
-        value->SetTargetHeading(headingDist(gen));
-        value->SetTargetSpeed(speedDist(gen));
-        value->SetPosition(posXDist(gen), posYDist(gen));
-    }
-}
-
-void RadarControl::AddRenderEngine(std::shared_ptr<RenderEngine> re)
-{
-    mRenderEngine = re;
-}
-
-void RadarControl::DrawEntities()
-{
-    for (auto& [key, value] : GetEntities())
-    {
-        // Attempt to cast Aircraft -> AircraftShape (which is also sf::Drawable)
-        if (auto shape = std::dynamic_pointer_cast<AircraftShape>(value))
-        {
-            mRenderEngine->AddDrawables(shape);
-        }
-    }
 }
 
 void RadarControl::HandleInputs(const std::optional<sf::Event>& event,
@@ -77,21 +66,21 @@ void RadarControl::HandleInputs(const std::optional<sf::Event>& event,
         sf::Vector2i mousePixel = sf::Mouse::getPosition(window);
         sf::Vector2f mouseWorld = window.mapPixelToCoords(mousePixel);  // convert to world space
 
-        for (auto& [_, aircraft] : GetEntities())
-        {
-            if (auto shape = std::dynamic_pointer_cast<AircraftShape>(aircraft))
-            {
-                if (shape->ContainsPoint(mouseWorld))
-                {
-                    // Clicked on this AircraftShape
-                    if (mSelected)
-                    {
-                        mSelected->SetSelected(false);
-                    }
-                    mSelected = shape;
-                    mSelected->SetSelected(true);
-                }
-            }
-        }
+        // for (auto& [_, aircraft] : mEntityManager->getEntity())
+        // {
+        //     if (auto shape = std::dynamic_pointer_cast<AircraftShape>(aircraft))
+        //     {
+        //         if (shape->ContainsPoint(mouseWorld))
+        //         {
+        //             // Clicked on this AircraftShape
+        //             if (mSelected)
+        //             {
+        //                 mSelected->SetSelected(false);
+        //             }
+        //             mSelected = shape;
+        //             mSelected->SetSelected(true);
+        //         }
+        //     }
+        // }
     }
 }

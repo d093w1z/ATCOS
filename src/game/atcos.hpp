@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "config.hpp"
+#include "graphics/EntityManager.hpp"
 #include "graphics/RadarControl.hpp"
-#include "graphics/RenderEngine.hpp"
 
 class ATCOSApp
 {
@@ -13,7 +13,7 @@ class ATCOSApp
     AppConfig mConfig;
 
     std::shared_ptr<RadarControl> mRadar;
-    std::shared_ptr<RenderEngine> mRenderEngine;
+    std::shared_ptr<EntityManager> mEntityManager;
 
    public:
     ATCOSApp();

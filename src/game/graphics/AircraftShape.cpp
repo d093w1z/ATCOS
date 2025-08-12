@@ -43,18 +43,23 @@ void AircraftShape::InitializeFont()
     mLabel.setFillColor(sf::Color::Green);
 }
 
-AircraftShape::AircraftShape(float size, float angleDeg)
-    : mSize(size),
+AircraftShape::AircraftShape(int id, float size, float angleDeg)
+    : IEntity(id),
+      mSize(size),
       mBody(sf::PrimitiveType::LineStrip, 5),
       mHeadingIndicator(sf::PrimitiveType::Lines, 2),
       mLabel(mFont)
 {
     Initialize();
-
     mTrailTimer = std::chrono::steady_clock().now();
 }
 
-AircraftShape::AircraftShape(const AircraftShape& as) : mLabel(mFont)
+AircraftShape::AircraftShape(const AircraftShape& as)
+    : IEntity(as.getId()),
+      mSize(as.mSize),
+      mBody(sf::PrimitiveType::LineStrip, 5),
+      mHeadingIndicator(sf::PrimitiveType::Lines, 2),
+      mLabel(mFont)
 {
     Initialize();
 }

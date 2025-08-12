@@ -11,7 +11,6 @@
 #include <memory>
 #include <tracy/Tracy.hpp>
 #include "graphics/RadarControl.hpp"
-#include "graphics/RenderEngine.hpp"
 #include "log.hpp"
 #include "timer.hpp"
 
@@ -28,10 +27,9 @@ ATCOSApp::ATCOSApp()
     mWindow.setFramerateLimit(settings.Window.FPS);
     mWindow.setPosition(sf::Vector2i({settings.Window.PositionX, settings.Window.PositionY}));
 
-    // Initialize RadarControl & RenderEngine
-    mRenderEngine = std::make_shared<RenderEngine>();
-    mRadar = std::make_shared<RadarControl>();
-    mRadar->AddRenderEngine(mRenderEngine);
+    // Initialize RadarControl & EntityManager
+    mEntityManager = std::make_shared<EntityManager>();
+    mRadar = std::make_shared<RadarControl>(mEntityManager);
 }
 
 ATCOSApp::~ATCOSApp()
@@ -46,7 +44,6 @@ void ATCOSApp::RunLoop()
 
     sf::View view = mWindow.getDefaultView();
 
-    mRadar->DrawEntities();
     Settings& settings = mConfig.GetSettings();
     float dt = 1.f / (float) settings.Window.FPS;
     while (mWindow.isOpen())
@@ -72,8 +69,8 @@ void ATCOSApp::RunLoop()
 
         mWindow.clear(sf::Color());
 
-        mRadar->Update(dt);
-        mRenderEngine->draw(mWindow);
+        mEntityManager->updateAll(dt);
+        mEntityManager->drawAll(mWindow);
 
         mWindow.display();
         FrameMark;
