@@ -7,11 +7,27 @@
 #include "graphics/AircraftShape.hpp"
 #include "log.hpp"
 
-RadarControl::RadarControl(std::shared_ptr<EntityManager> entityManager)
-    : mEntityManager(std::move(entityManager)), mSelected(nullptr)
+RadarControl::RadarControl(std::shared_ptr<EntityManager> entityManager,
+                           std::shared_ptr<EventDispatcher> eventDispatcher)
+    : mEntityManager(entityManager), mSelected(nullptr)
 {
     // Initialize the radar with some aircrafts
     InitializeRadar();
+    // Subscribe to events
+    eventDispatcher->subscribe<EntitySelectedEvent>(
+        [&](const EntitySelectedEvent& e)
+        {
+            auto entity = mEntityManager->getEntity(e.entityId);
+            if (entity)
+            {
+                if (mSelected)
+                {
+                    mSelected->SetSelected(false);
+                }
+                mSelected = std::dynamic_pointer_cast<AircraftShape>(entity);
+                mSelected->SetSelected(true);
+            }
+        });
 }
 
 void RadarControl::InitializeRadar()

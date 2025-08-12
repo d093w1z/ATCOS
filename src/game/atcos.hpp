@@ -3,6 +3,7 @@
 #include <memory>
 #include "config.hpp"
 #include "graphics/EntityManager.hpp"
+#include "graphics/EventDispatcher.hpp"
 #include "graphics/RadarControl.hpp"
 
 class ATCOSApp
@@ -14,6 +15,7 @@ class ATCOSApp
 
     std::shared_ptr<RadarControl> mRadar;
     std::shared_ptr<EntityManager> mEntityManager;
+    std::shared_ptr<EventDispatcher> mEventDispatcher;
 
    public:
     ATCOSApp();

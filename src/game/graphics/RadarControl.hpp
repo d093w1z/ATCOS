@@ -8,13 +8,14 @@
 #include <memory>
 #include "AircraftShape.hpp"
 #include "EntityManager.hpp"
+#include "EventDispatcher.hpp"
 #include "core/radar.hpp"
 
 class RadarControl : public Radar
 {
    public:
     RadarControl();
-    RadarControl(std::shared_ptr<EntityManager>);
+    RadarControl(std::shared_ptr<EntityManager>, std::shared_ptr<EventDispatcher>);
     RadarControl(const RadarControl&) = default;
     RadarControl(RadarControl&&) = default;
 
