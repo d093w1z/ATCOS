@@ -42,11 +42,13 @@ ATCOSApp::~ATCOSApp()
 void ATCOSApp::RunLoop()
 {
     ZoneScoped;
+    constexpr float VIEW_CENTER_DIVISOR = 2.f;  // Avoid magic number
+
     sf::View view = mWindow.getDefaultView();
 
     mRadar->DrawEntities();
     Settings& settings = mConfig.GetSettings();
-    float dt = 1.f / settings.Window.FPS;
+    float dt = 1.f / (float) settings.Window.FPS;
     while (mWindow.isOpen())
     {
         ScopedTimer st("Update Loop");
@@ -61,7 +63,8 @@ void ATCOSApp::RunLoop()
             {
                 view.setSize(
                     {static_cast<float>(resized->size.x), static_cast<float>(resized->size.y)});
-                view.setCenter({view.getSize().x / 2.f, view.getSize().y / 2.f});
+                view.setCenter({view.getSize().x / VIEW_CENTER_DIVISOR,
+                                view.getSize().y / VIEW_CENTER_DIVISOR});
                 mWindow.setView(view);
             }
             mRadar->HandleInputs(event, mWindow);

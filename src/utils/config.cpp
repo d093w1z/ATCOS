@@ -5,10 +5,6 @@
 
 Settings AppConfig::mSettings;
 
-AppConfig::AppConfig(/* args */) {}
-
-AppConfig::~AppConfig() {}
-
 Settings& AppConfig::GetSettings()
 {
     return mSettings;
@@ -27,10 +23,10 @@ void AppConfig::parseFile(const std::filesystem::path& filePath)
         ATCOS_LIB_ERROR("Error parsing file '{}':\n{}\n--> line {}, column {}", *err.source().path,
                         err.description(), err.source().begin.line, err.source().begin.column);
     }
-    mSettings.Window.Title = tbl["Window"]["Title"].value_or("ATCOS Game");
-    mSettings.Window.Height = tbl["Window"]["Height"].value_or(1080u);
-    mSettings.Window.Width = tbl["Window"]["Width"].value_or(1920u);
-    mSettings.Window.FPS = tbl["Window"]["FPS"].value_or(144);
+    mSettings.Window.Title = tbl["Window"]["Title"].value_or(Defaults::TITLE);
+    mSettings.Window.Height = tbl["Window"]["Height"].value_or(Defaults::HEIGHT);
+    mSettings.Window.Width = tbl["Window"]["Width"].value_or(Defaults::WIDTH);
+    mSettings.Window.FPS = tbl["Window"]["FPS"].value_or(Defaults::FPS);
 
     mSettings.Window.PositionX = tbl["Window"]["PositionX"].value_or(0);
     mSettings.Window.PositionY = tbl["Window"]["PositionY"].value_or(0);
